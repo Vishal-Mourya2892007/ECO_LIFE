@@ -1,0 +1,261 @@
+/* ye Setting.html ka css hai */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #F2F5F0;
+    color: #2c3e50;
+    font-family: Arial, sans-serif;
+}
+
+.upper1 {
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.top1 {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    gap: 15px;
+    background-color: #ffffff;
+    border: 1px solid #D1D5DB;
+    height: 60px;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.menu-btn1 {
+    font-size: 25px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.main-content1 {
+    width: 100%;
+}
+
+/* =========================
+   MAIN SETTING SECTION
+========================= */
+
+.Setting-body1 {
+    background-color: #F2F5F0;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+}
+
+/* =========================
+   LEFT SIDE
+========================= */
+
+.setting-body11 {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.setting-body11 span {
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #D1D5DB;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   RIGHT SIDE
+========================= */
+
+.setting-body12 {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card1 {
+    background-color: #ffffff;
+    width: 100%;
+    height: 300px;
+    border: 1px solid #D1D5DB;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card2,
+.card3 {
+    background-color: #ffffff;
+    width: 100%;
+    height: 160px;
+    border: 1px solid #D1D5DB;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer-Setting1 {
+    text-align: center;
+    padding: 20px;
+    color: #2c3e50;
+    font-size: 14px;
+    background-color: #f2f5f0;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1024px) {
+
+    .Setting-body1 {
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .setting-body11 {
+        width: 60%;
+    }
+
+    .setting-body12 {
+        width: 40%;
+    }
+
+    .setting-body11 span {
+        height: 300px;
+    }
+
+    .card1 {
+        height: 260px;
+    }
+
+    .card2,
+    .card3 {
+        height: 140px;
+    }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+    .top1 {
+        font-size: 16px;
+        padding: 0 15px;
+    }
+
+    .menu-btn1 {
+        font-size: 22px;
+    }
+
+    .upper1 {
+        font-size: 20px;
+        padding: 15px;
+    }
+
+    /* Main section becomes vertical */
+
+    .Setting-body1 {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        width: 100%;
+    }
+
+    /* Left column */
+
+    .setting-body11 {
+        width: 100%;
+        gap: 15px;
+    }
+
+    .setting-body11 span {
+        width: 100%;
+        height: 220px;
+    }
+
+    /* Right column */
+
+    .setting-body12 {
+        width: 100%;
+        gap: 15px;
+    }
+
+    .card1 {
+        width: 100%;
+        height: 220px;
+    }
+
+    .card2,
+    .card3 {
+        width: 100%;
+        height: 160px;
+    }
+
+    .footer-Setting1 {
+        font-size: 12px;
+        padding: 15px;
+    }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+    .upper1 {
+        font-size: 18px;
+        padding: 12px;
+    }
+
+    .Setting-body1 {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .setting-body11,
+    .setting-body12 {
+        gap: 12px;
+    }
+
+    .setting-body11 span {
+        height: 180px;
+    }
+
+    .card1 {
+        height: 180px;
+    }
+
+    .card2,
+    .card3 {
+        height: 140px;
+    }
+}
