@@ -11,15 +11,7 @@ body {
     min-height: 100vh;
 }
 
-.content-wrapper {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s ease;
-}
-
-.top {
+.top-header {
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -27,9 +19,9 @@ body {
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 16px 24px;
-    height: 70px;
+    border-bottom: 1px solid #e9efec;
+    padding: 14px 28px;
+    height: 68px;
 }
 
 .header-left {
@@ -38,36 +30,80 @@ body {
     gap: 16px;
 }
 
+.menu-btn {
+    background: transparent;
+    border: none;
+    color: #475569;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.menu-btn:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
+
 .user-greeting h1 {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: #0f172a;
+    letter-spacing: -0.3px;
     line-height: 1.2;
 }
 
 .user-greeting p {
-    font-size: 13px;
+    font-size: 12px;
     color: #64748b;
-    margin-top: 2px;
+    margin-top: 3px;
+    font-weight: 400;
+}
+
+.dot-separator {
+    margin: 0 4px;
+    color: #cbd5e1;
+}
+
+.user-greeting p strong {
+    color: #16a34a;
+    font-weight: 600;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
 
-.top-badge {
-    background-color: #dcfce7;
-    color: #15803d;
-    padding: 6px 14px;
+.points-pill {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 5px 12px;
     border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
-.icon-btn {
-    background: #f1f5f9;
+.pts-plus {
+    color: #15803d;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pts-label {
+    color: #16a34a;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.bell-btn {
+    position: relative;
+    background: #f8fafc;
     border: 1px solid #e2e8f0;
     width: 36px;
     height: 36px;
@@ -75,33 +111,47 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #64748b;
     cursor: pointer;
-    color: #475569;
     transition: all 0.2s ease;
 }
 
-.icon-btn:hover {
-    background-color: #e2e8f0;
+.bell-btn:hover {
+    background: #f1f5f9;
     color: #0f172a;
+    border-color: #cbd5e1;
 }
 
-.user-avatar {
+.bell-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background-color: #ef4444;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+}
+
+.avatar-ring {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background-color: #15803d;
-    color: #ffffff;
+    background-color: #dcfce7;
+    border: 1.5px solid #86efac;
+    color: #15803d;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 14px;
-}
-
-.menu-btn {
-    font-size: 22px;
-    border: none;
-    background: none;
+    font-size: 12px;
+    letter-spacing: 0.5px;
     cursor: pointer;
 }
 
@@ -110,7 +160,7 @@ body {
     width: 100%;
     max-width: 1400px;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     gap: 20px;
     padding: 20px;
 }
@@ -129,9 +179,9 @@ body {
     width: 100%;
 }
 
-.body .metric-card, 
+.body .metric-card,
 .body .score-card {
-    flex: 1; 
+    flex: 1;
     height: 140px;
     display: flex;
     flex-direction: column;
@@ -146,6 +196,30 @@ body {
     font-weight: 700;
     color: #64748b;
     letter-spacing: 0.5px;
+}
+
+.metric-icon-box {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.metric-icon-box.icon-green {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.metric-icon-box.icon-orange {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+.metric-icon-box.icon-teal {
+    background-color: #e0f2f1;
+    color: #00695c;
 }
 
 .metric-value {
@@ -165,9 +239,18 @@ body {
     font-weight: 600;
 }
 
-.badge-green { color: #16a34a; }
-.badge-red { color: #dc2626; }
-.badge small { color: #94a3b8; font-weight: 400; }
+.badge-green {
+    color: #16a34a;
+}
+
+.badge-red {
+    color: #dc2626;
+}
+
+.badge small {
+    color: #94a3b8;
+    font-weight: 400;
+}
 
 .score-card {
     align-items: center;
@@ -236,7 +319,7 @@ body {
 }
 
 .breakdown-card {
-    flex: 1; 
+    flex: 1;
     height: 310px;
     display: flex;
     flex-direction: column;
@@ -268,8 +351,13 @@ body {
     font-weight: 600;
 }
 
-.legend-line.green-line { color: #2e7d32; }
-.legend-line.gray-line { color: #94a3b8; }
+.legend-line.green-line {
+    color: #2e7d32;
+}
+
+.legend-line.gray-line {
+    color: #94a3b8;
+}
 
 .chart-wrapper {
     position: relative;
@@ -321,6 +409,7 @@ body {
     font-weight: 600;
     color: #0f172a;
 }
+
 .body2 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -328,7 +417,9 @@ body {
     width: 100%;
 }
 
-.energy-card, .habits-card, .tips-card {
+.energy-card,
+.habits-card,
+.tips-card {
     height: 380px;
     display: flex;
     flex-direction: column;
@@ -537,9 +628,17 @@ body {
     flex-shrink: 0;
 }
 
-.green-dot { background-color: #16a34a; }
-.gray-dot { background-color: #64748b; }
-.red-dot { background-color: #dc2626; }
+.green-dot {
+    background-color: #16a34a;
+}
+
+.gray-dot {
+    background-color: #64748b;
+}
+
+.red-dot {
+    background-color: #dc2626;
+}
 
 .activity-details {
     display: flex;
@@ -556,34 +655,25 @@ body {
     font-size: 11px;
     color: #64748b;
 }
+
 .activity-details span {
     font-weight: 600;
     color: #0f172a;
 }
 
-.green-text { color: #16a34a !important; }
-.red-text { color: #dc2626 !important; }
+.green-text {
+    color: #16a34a !important;
+}
+
+.red-text {
+    color: #dc2626 !important;
+}
 
 .view-all-btn {
     font-size: 12px;
     color: #15803d;
     text-decoration: none;
     font-weight: 600;
-}
-
-@media (max-width: 1024px) {
-    .body2 {
-        grid-template-columns: 1fr;
-    }
-    .activity-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 640px) {
-    .activity-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 .footer {
@@ -595,21 +685,115 @@ body {
 }
 
 @media (max-width: 1024px) {
-    .body {
-        flex-wrap: wrap;
-    }
-    
-    .body .metric-card, .body .score-card {
-        flex: 1 1 calc(50% - 10px);
+    .main-content {
+        padding: 16px;
+        gap: 16px;
     }
 
-    .body1, .body2 {
+    .body {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .body .metric-card,
+    .body .score-card {
+        height: 130px;
+    }
+
+    .body1 {
         flex-direction: column;
+        gap: 16px;
+    }
+
+    .chart-card,
+    .breakdown-card {
+        height: 320px;
+    }
+
+    .body2 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .energy-card,
+    .habits-card,
+    .tips-card {
+        height: auto;
+        min-height: 340px;
+    }
+
+    .activity-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
 }
 
-@media (max-width: 640px) {
-    .body .metric-card, .body .score-card {
-        flex: 1 1 100%;
+@media (max-width: 768px) {
+
+    .top-header {
+        padding: 12px 16px;
+        height: auto;
+        min-height: 60px;
+    }
+
+    .user-greeting h1 {
+        font-size: 16px;
+    }
+
+    .user-greeting p {
+        font-size: 11px;
+    }
+
+    .points-pill {
+        padding: 4px 8px;
+    }
+
+    .pts-plus {
+        font-size: 11px;
+    }
+
+    .pts-label {
+        display: none;
+    }
+
+    .donut-legend {
+        gap: 4px;
+    }
+}
+
+@media (max-width: 520px) {
+    .top-header {
+        gap: 10px;
+    }
+
+    .dot-separator {
+        display: none;
+    }
+
+    .user-greeting p {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .body {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-item {
+        padding: 10px;
+    }
+
+    .chart-card,
+    .breakdown-card {
+        height: 300px;
+    }
+
+    .metric-value {
+        font-size: 22px;
     }
 }

@@ -1,22 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const dashboardData = {
+    const appState = {
         user: {
             name: "Vishal",
+            initials: "VM",
             percentile: 87,
-            dailyPoints: 33
+            dailyPoints: 33,
+            notificationsCount: 2
         },
         metrics: {
-            carbon: 2.1,
-            energy: 287,
-            water: 3140,
-            ecoScore: 84
+            carbon: { value: 2.1, change: "12% lower", isGood: true },
+            energy: { value: 287, change: "8% lower", isGood: true },
+            water: { value: 3140, change: "5% higher", isGood: false },
+            ecoScore: { score: 84, tag: "EXCELLENT" }
         },
-        energyWeekly: {
+        trendChart: {
+            labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+            userData: [5.2, 5.0, 4.8, 4.7, 4.8, 4.8, 4.5],
+            avgData: [6.0, 6.0, 5.9, 5.8, 5.8, 5.7, 5.6]
+        },
+        breakdownChart: [
+            { category: "Transport", value: 38, color: "#2e7d32" },
+            { category: "Home Energy", value: 29, color: "#a5d6a7" },
+            { category: "Food", value: 21, color: "#00897b" },
+            { category: "Shopping", value: 12, color: "#c62828" }
+        ],
+        weeklyEnergy: {
             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            values: [8, 8, 9, 6.5, 7, 11, 10],
-            weekdaysColor: '#4ba560',
-            weekendsColor: '#d98e48'
+            data: [8, 8, 9, 6.5, 7, 11, 10]
         },
         habits: [
             { id: 1, text: "Cycled to work", icon: "🚴", pts: 15, completed: true },
@@ -28,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         tips: [
             {
+                id: "tip-1",
                 title: "Switch to LED bulbs",
                 tag: "High",
                 tagClass: "tag-high",
@@ -36,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 savings: "Saves 300 kg CO₂/yr"
             },
             {
+                id: "tip-2",
                 title: "Cold-wash laundry",
                 tag: "Medium",
                 tagClass: "tag-medium",
@@ -44,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 savings: "Saves 90 kg CO₂/yr"
             },
             {
+                id: "tip-3",
                 title: "Plant-based Mondays",
                 tag: "High",
                 tagClass: "tag-high",
@@ -54,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         activities: [
             {
+                id: "act-1",
                 title: "Solar panel output recorded",
                 time: "09:14",
                 value: "+4.2 kWh",
@@ -61,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 valueClass: ""
             },
             {
+                id: "act-2",
                 title: "Weekly water report generated",
                 time: "08:50",
                 value: "3,140 L",
@@ -68,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 valueClass: ""
             },
             {
+                id: "act-3",
                 title: "Carbon goal milestone reached",
                 time: "Yesterday",
                 value: "72%",
@@ -75,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 valueClass: "green-text"
             },
             {
+                id: "act-4",
                 title: "Weekend energy spike detected",
                 time: "Yesterday",
                 value: "+18%",
@@ -84,66 +102,65 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-    function renderHeaderAndMetrics() {
-        const greetingElement = document.getElementById('greeting');
-        if (greetingElement) {
-            const hour = new Date().getHours();
-            let timeStr = 'morning';
-            if (hour >= 12 && hour < 17) timeStr = 'afternoon';
-            else if (hour >= 17 || hour < 5) timeStr = 'evening';
-            greetingElement.innerText = `Good ${timeStr}, ${dashboardData.user.name}`;
-        }
+    let trendChartInstance = null;
+    let donutChartInstance = null;
+    let barChartInstance = null;
 
-        const dateElement = document.getElementById('current-date');
-        if (dateElement) {
-            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-            const formattedDate = new Date().toLocaleDateString('en-US', options);
-            dateElement.innerText = `${formattedDate} — You are ahead of ${dashboardData.user.percentile}% of users this week`;
-        }
 
-        const carbonElem = document.getElementById('carbon-val');
-        if (carbonElem) carbonElem.innerText = dashboardData.metrics.carbon;
+    function renderHeader() {
+        const hour = new Date().getHours();
+        let timeGreeting = 'morning';
+        if (hour >= 12 && hour < 17) timeGreeting = 'afternoon';
+        else if (hour >= 17 || hour < 5) timeGreeting = 'evening';
 
-        const energyElem = document.getElementById('energy-val');
-        if (energyElem) energyElem.innerText = dashboardData.metrics.energy;
+        document.getElementById('greeting').innerText = `Good ${timeGreeting}, ${appState.user.name}`;
+        
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        const dateStr = new Date().toLocaleDateString('en-US', options);
+        document.getElementById('current-date').innerHTML = `${dateStr} <span class="dot-separator">•</span> You are ahead of <strong>${appState.user.percentile}%</strong> of users this week`;
 
-        const waterElem = document.getElementById('water-val');
-        if (waterElem) waterElem.innerText = dashboardData.metrics.water.toLocaleString();
+        document.getElementById('daily-points').innerText = appState.user.dailyPoints;
+        document.getElementById('unread-count').innerText = appState.user.notificationsCount;
+        document.getElementById('user-initials').innerText = appState.user.initials;
+    }
 
-        const scoreValElem = document.getElementById('eco-score-val');
-        const scoreCircleElem = document.getElementById('score-circle-bg');
-        if (scoreValElem && scoreCircleElem) {
-            scoreValElem.innerText = dashboardData.metrics.ecoScore;
-            scoreCircleElem.style.background = `conic-gradient(#16a34a 0% ${dashboardData.metrics.ecoScore}%, #e2e8f0 ${dashboardData.metrics.ecoScore}% 100%)`;
-        }
+    function renderMetrics() {
+        // Carbon
+        document.getElementById('carbon-val').innerText = appState.metrics.carbon.value;
+        document.getElementById('carbon-badge').className = `badge ${appState.metrics.carbon.isGood ? 'badge-green' : 'badge-red'}`;
+        document.getElementById('carbon-badge').innerHTML = `${appState.metrics.carbon.isGood ? '↓' : '↑'} ${appState.metrics.carbon.change} <small>vs last month</small>`;
 
-        const pointsElem = document.getElementById('daily-points');
-        if (pointsElem) pointsElem.innerText = dashboardData.user.dailyPoints;
+        // Energy
+        document.getElementById('energy-val').innerText = appState.metrics.energy.value;
+        document.getElementById('energy-badge').className = `badge ${appState.metrics.energy.isGood ? 'badge-green' : 'badge-red'}`;
+        document.getElementById('energy-badge').innerHTML = `${appState.metrics.energy.isGood ? '↓' : '↑'} ${appState.metrics.energy.change} <small>vs last month</small>`;
+
+        // Water
+        document.getElementById('water-val').innerText = appState.metrics.water.value.toLocaleString();
+        document.getElementById('water-badge').className = `badge ${appState.metrics.water.isGood ? 'badge-green' : 'badge-red'}`;
+        document.getElementById('water-badge').innerHTML = `${appState.metrics.water.isGood ? '↓' : '↑'} ${appState.metrics.water.change} <small>vs last month</small>`;
+
+        // Eco Score
+        const score = appState.metrics.ecoScore.score;
+        document.getElementById('eco-score-val').innerText = score;
+        document.getElementById('score-tag-text').innerText = appState.metrics.ecoScore.tag;
+        document.getElementById('score-circle-bg').style.background = `conic-gradient(#16a34a 0% ${score}%, #e2e8f0 ${score}% 100%)`;
     }
 
     function renderHabits() {
         const habitsListContainer = document.getElementById('habits-list-container');
-        const countText = document.getElementById('habits-count-text');
-        const percentageText = document.getElementById('habits-percentage');
-        const progressFill = document.getElementById('habits-progress-fill');
-
-        if (!habitsListContainer) return;
-
-        const completedCount = dashboardData.habits.filter(h => h.completed).length;
-        const totalCount = dashboardData.habits.length;
+        const completedCount = appState.habits.filter(h => h.completed).length;
+        const totalCount = appState.habits.length;
         const percentage = Math.round((completedCount / totalCount) * 100);
 
-        countText.innerText = `${completedCount} of ${totalCount} completed`;
-        percentageText.innerText = `${percentage}%`;
-        progressFill.style.width = `${percentage}%`;
+        document.getElementById('habits-count-text').innerText = `${completedCount} of ${totalCount} completed`;
+        document.getElementById('habits-percentage').innerText = `${percentage}%`;
+        document.getElementById('habits-progress-fill').style.width = `${percentage}%`;
 
-        habitsListContainer.innerHTML = dashboardData.habits.map(habit => `
+        habitsListContainer.innerHTML = appState.habits.map(habit => `
             <li class="habit-item ${habit.completed ? 'completed' : ''}" data-id="${habit.id}" style="cursor: pointer;">
                 <div class="habit-left">
-                    ${habit.completed 
-                        ? '<span class="check-icon">✓</span>' 
-                        : '<span class="circle-icon"></span>'
-                    }
+                    ${habit.completed ? '<span class="check-icon">✓</span>' : '<span class="circle-icon"></span>'}
                     <span class="habit-icon">${habit.icon}</span>
                     <span class="habit-text">${habit.text}</span>
                 </div>
@@ -151,27 +168,16 @@ document.addEventListener('DOMContentLoaded', () => {
             </li>
         `).join('');
 
-        attachHabitClickListeners();
-    }
-
-    function attachHabitClickListeners() {
-        const items = document.querySelectorAll('.habit-item');
-        items.forEach(item => {
+        // Interactive Click Toggle Logic
+        document.querySelectorAll('.habit-item').forEach(item => {
             item.addEventListener('click', () => {
                 const id = parseInt(item.getAttribute('data-id'));
-                const habit = dashboardData.habits.find(h => h.id === id);
-
+                const habit = appState.habits.find(h => h.id === id);
                 if (habit) {
                     habit.completed = !habit.completed;
-
-                    if (habit.completed) {
-                        dashboardData.user.dailyPoints += habit.pts;
-                    } else {
-                        dashboardData.user.dailyPoints -= habit.pts;
-                    }
-
+                    appState.user.dailyPoints += habit.completed ? habit.pts : -habit.pts;
                     renderHabits();
-                    renderHeaderAndMetrics();
+                    renderHeader();
                 }
             });
         });
@@ -179,9 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderTips() {
         const tipsContainer = document.getElementById('tips-list-container');
-        if (!tipsContainer) return;
-
-        tipsContainer.innerHTML = dashboardData.tips.map(tip => `
+        tipsContainer.innerHTML = appState.tips.map(tip => `
             <div class="tip-box ${tip.boxClass}">
                 <div class="tip-top">
                     <strong>${tip.title}</strong>
@@ -195,10 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderActivities() {
-        const activityContainer = document.getElementById('activity-grid-container');
-        if (!activityContainer) return;
-
-        activityContainer.innerHTML = dashboardData.activities.map(act => `
+        const container = document.getElementById('activity-grid-container');
+        container.innerHTML = appState.activities.map(act => `
             <div class="activity-item">
                 <span class="activity-dot ${act.dotColor}"></span>
                 <div class="activity-details">
@@ -209,38 +211,33 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    function initCharts() {
+    function renderDonutLegend() {
+        const legendContainer = document.getElementById('donut-legend-container');
+        legendContainer.innerHTML = appState.breakdownChart.map(item => `
+            <div class="legend-row">
+                <span class="legend-dot" style="background-color: ${item.color};"></span>
+                <span class="legend-label">${item.category}</span>
+                <span class="legend-value">${item.value}%</span>
+            </div>
+        `).join('');
+    }
+
+    function renderCharts() {
+        // Line Chart
         const ctxLine = document.getElementById('trendLineChart');
         if (ctxLine) {
+            if (trendChartInstance) trendChartInstance.destroy();
             const gradient = ctxLine.getContext('2d').createLinearGradient(0, 0, 0, 180);
             gradient.addColorStop(0, 'rgba(46, 125, 50, 0.12)');
             gradient.addColorStop(1, 'rgba(46, 125, 50, 0.0)');
 
-            new Chart(ctxLine, {
+            trendChartInstance = new Chart(ctxLine, {
                 type: 'line',
                 data: {
-                    labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                    labels: appState.trendChart.labels,
                     datasets: [
-                        {
-                            label: 'You',
-                            data: [5.2, 5.0, 4.8, 4.7, 4.8, 4.8, 4.5],
-                            borderColor: '#2e7d32',
-                            borderWidth: 2,
-                            backgroundColor: gradient,
-                            fill: true,
-                            tension: 0.3,
-                            pointRadius: 0
-                        },
-                        {
-                            label: 'Avg',
-                            data: [6.0, 6.0, 5.9, 5.8, 5.8, 5.7, 5.6],
-                            borderColor: '#cbd5e1',
-                            borderWidth: 1.5,
-                            borderDash: [4, 4],
-                            fill: false,
-                            tension: 0.1,
-                            pointRadius: 0
-                        }
+                        { label: 'You', data: appState.trendChart.userData, borderColor: '#2e7d32', borderWidth: 2, backgroundColor: gradient, fill: true, tension: 0.3, pointRadius: 0 },
+                        { label: 'Avg', data: appState.trendChart.avgData, borderColor: '#cbd5e1', borderWidth: 1.5, borderDash: [4, 4], fill: false, tension: 0.1, pointRadius: 0 }
                     ]
                 },
                 options: {
@@ -255,44 +252,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Donut Chart
         const ctxDonut = document.getElementById('breakdownDonutChart');
         if (ctxDonut) {
-            new Chart(ctxDonut, {
+            if (donutChartInstance) donutChartInstance.destroy();
+            donutChartInstance = new Chart(ctxDonut, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Transport', 'Home Energy', 'Food', 'Shopping'],
-                    datasets: [{
-                        data: [38, 29, 21, 12],
-                        backgroundColor: ['#2e7d32', '#a5d6a7', '#00897b', '#c62828'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
+                    labels: appState.breakdownChart.map(i => i.category),
+                    datasets: [{ data: appState.breakdownChart.map(i => i.value), backgroundColor: appState.breakdownChart.map(i => i.color), borderWidth: 2, borderColor: '#ffffff' }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '72%',
-                    plugins: { legend: { display: false } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '72%', plugins: { legend: { display: false } } }
             });
         }
 
-        const ctxEnergy = document.getElementById('energyBarChart');
-        if (ctxEnergy) {
-            const barColors = dashboardData.energyWeekly.labels.map((_, i) => 
-                i >= 5 ? dashboardData.energyWeekly.weekendsColor : dashboardData.energyWeekly.weekdaysColor
-            );
+        // Bar Chart
+        const ctxBar = document.getElementById('energyBarChart');
+        if (ctxBar) {
+            if (barChartInstance) barChartInstance.destroy();
+            const colors = appState.weeklyEnergy.labels.map((_, index) => index >= 5 ? '#d98e48' : '#4ba560');
 
-            new Chart(ctxEnergy, {
+            barChartInstance = new Chart(ctxBar, {
                 type: 'bar',
                 data: {
-                    labels: dashboardData.energyWeekly.labels,
-                    datasets: [{
-                        data: dashboardData.energyWeekly.values,
-                        backgroundColor: barColors,
-                        borderRadius: 4,
-                        borderSkipped: false
-                    }]
+                    labels: appState.weeklyEnergy.labels,
+                    datasets: [{ data: appState.weeklyEnergy.data, backgroundColor: colors, borderRadius: 4, borderSkipped: false }]
                 },
                 options: {
                     responsive: true,
@@ -307,9 +291,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    renderHeaderAndMetrics();
+    // Initialize App
+    renderHeader();
+    renderMetrics();
     renderHabits();
     renderTips();
     renderActivities();
-    initCharts();
+    renderDonutLegend();
+    renderCharts();
 });
