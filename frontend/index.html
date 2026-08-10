@@ -1,52 +1,214 @@
-<!-- ye main body hai index.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECO LIFE</title>
+    <title>EcoLife Dashboard</title>
+
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="sidebar.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
-    <nav class="top">
-        <button class="menu-btn" id="menu-toggle">
-            ☰
-        </button>
-        <span>Good Morning, Vishal</span>
-    </nav>
 
-    <div id="sidebar"></div>
-    <div class="main-content" id="main-content">
-        <div class="body">
-            <span class="card">Carbon</span>
-            <span class="card">Energy</span>
-            <span class="card">Water</span>
-            <span class="card">ECO Score</span>
-        </div>
+    <div id="sidebar-container"></div>
 
-        <div class="body1">
-            <span class="first">Carbon Footprint Trend</span>
-            <span class="second">Emissions Breakdown</span>
-        </div>
+    <!-- MAIN CONTENT WRAPPER -->
+    <div class="content-wrapper">
 
-        <div class="body2">
-            <span class="first">Energy This Week</span>
-            <span class="second">Daily Habits</span>
-            <span class="third">Personalized Tips</span>
-        </div>
+        <!-- TOP HEADER -->
+        <header class="top">
+            <div class="header-left">
+                <button class="menu-btn" id="toggle-sidebar">☰</button>
+                <div class="user-greeting">
+                    <h1 id="greeting">Good afternoon, Vishal</h1>
+                    <p id="current-date">Monday, August 10, 2026 — You are ahead of 87% of users this week</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="top-badge">+<span id="daily-points">33</span> pts today</span>
+                <button class="icon-btn">🔔</button>
+                <div class="user-avatar">VI</div>
+            </div>
+        </header>
 
-        <div class="body3">
-            <span>Recent Activity</span>
-        </div>
+        <!-- DASHBOARD BODY CONTENT -->
+        <main class="main-content">
+            <!-- First body -->
+            <section class="body">
+                <div class="card metric-card">
+                    <div class="card-header"><span>CARBON</span> <span class="icon">🍃</span></div>
+                    <div class="metric-value"><span id="carbon-val">2.1</span> <small>t CO₂/mo</small></div>
+                    <div class="badge badge-green"><span id="carbon-trend">↓ 12% lower</span> <small>vs last
+                            month</small></div>
+                </div>
+
+                <div class="card metric-card">
+                    <div class="card-header"><span>ENERGY</span> <span class="icon">⚡</span></div>
+                    <div class="metric-value"><span id="energy-val">287</span> <small>kWh/mo</small></div>
+                    <div class="badge badge-green"><span id="energy-trend">↓ 8% lower</span> <small>vs last
+                            month</small></div>
+                </div>
+
+                <div class="card metric-card">
+                    <div class="card-header"><span>WATER</span> <span class="icon">💧</span></div>
+                    <div class="metric-value"><span id="water-val">3,140</span> <small>L/mo</small></div>
+                    <div class="badge badge-red"><span id="water-trend">↑ 5% higher</span> <small>vs last month</small>
+                    </div>
+                </div>
+
+                <div class="card score-card">
+                    <span class="score-title">ECO SCORE</span>
+                    <div class="score-circle" id="score-circle-bg">
+                        <div class="score-inner">
+                            <span class="score-num" id="eco-score-val">84</span>
+                            <span class="score-total">/ 100</span>
+                        </div>
+                    </div>
+                    <div class="score-tag" id="score-status-tag">EXCELLENT</div>
+                </div>
+            </section>
+
+            <!-- Second body -->
+            <section class="body1">
+
+                <div class="card chart-card">
+                    <div class="card-header-bar">
+                        <div>
+                            <h3>Carbon Footprint Trend</h3>
+                            <p class="subtitle">Monthly CO₂ (t) · You vs National Average</p>
+                        </div>
+                        <div class="chart-legend-top">
+                            <span class="legend-line green-line">— You</span>
+                            <span class="legend-line gray-line">— Avg</span>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="trendLineChart"></canvas>
+                    </div>
+                </div>
+
+
+                <div class="card breakdown-card">
+                    <div class="card-header-bar">
+                        <div>
+                            <h3>Emissions Breakdown</h3>
+                            <p class="subtitle">This month by category</p>
+                        </div>
+                    </div>
+
+                    <div class="donut-wrapper">
+                        <div class="donut-chart-container">
+                            <canvas id="breakdownDonutChart"></canvas>
+                        </div>
+
+                        <div class="donut-legend">
+                            <div class="legend-row">
+                                <span class="legend-dot" style="background-color: #2e7d32;"></span>
+                                <span class="legend-label">Transport</span>
+                                <span class="legend-value">38%</span>
+                            </div>
+                            <div class="legend-row">
+                                <span class="legend-dot" style="background-color: #a5d6a7;"></span>
+                                <span class="legend-label">Home Energy</span>
+                                <span class="legend-value">29%</span>
+                            </div>
+                            <div class="legend-row">
+                                <span class="legend-dot" style="background-color: #00897b;"></span>
+                                <span class="legend-label">Food</span>
+                                <span class="legend-value">21%</span>
+                            </div>
+                            <div class="legend-row">
+                                <span class="legend-dot" style="background-color: #c62828;"></span>
+                                <span class="legend-label">Shopping</span>
+                                <span class="legend-value">12%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- THIRD ROW: Energy, Habits, Personalized Tips -->
+            <section class="body2">
+                <!-- Energy This Week -->
+                <div class="card energy-card">
+                    <div class="card-header-bar">
+                        <div>
+                            <h3>Energy This Week</h3>
+                            <p class="subtitle">Daily kWh · weekends highlighted</p>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="energyBarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Daily Habits -->
+                <div class="card habits-card">
+                    <div class="card-header-bar">
+                        <div>
+                            <h3>Daily Habits</h3>
+                            <p class="subtitle" id="habits-count-text">0 of 0 completed</p>
+                        </div>
+                        <span class="habits-badge" id="habits-percentage">0%</span>
+                    </div>
+
+                    <div class="habits-progress-bar">
+                        <div class="habits-progress-fill" id="habits-progress-fill" style="width: 0%;"></div>
+                    </div>
+
+                    <ul class="habits-list" id="habits-list-container">
+                        <!-- Dynamically populated via JS -->
+                    </ul>
+
+                    <a href="Habits.html" class="view-all-link">View all habits →</a>
+                </div>
+
+                <!-- Personalized Tips -->
+                <div class="card tips-card">
+                    <div class="card-header-bar">
+                        <div>
+                            <h3>Personalized Tips</h3>
+                            <p class="subtitle">Click a tip to learn more</p>
+                        </div>
+                    </div>
+
+                    <div class="tips-list" id="tips-list-container">
+                        <!-- Dynamically populated via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOURTH ROW: Recent Activity -->
+            <section class="recent-activity-section">
+                <div class="card activity-card">
+                    <div class="card-header-bar">
+                        <div>
+                            <h3>Recent Activity</h3>
+                            <p class="subtitle">Last 48 hours across all categories</p>
+                        </div>
+                        <a href="#" class="view-all-btn">View all</a>
+                    </div>
+
+                    <div class="activity-grid" id="activity-grid-container">
+                        <!-- Dynamically populated via JS -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
         <footer class="footer">
             © 2026 EcoLife | Sustainable Living Dashboard
         </footer>
+
     </div>
-    
     <script src="sidebar.js"></script>
     <script src="index.js"></script>
 </body>
