@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLife - Advanced Carbon Footprint Calculator</title>
+    <link rel="stylesheet" href="carbon-calculator.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="calc-header">
+        <div class="header-left">
+            <button id="back-to-dashboard" class="btn-back">← Back to Dashboard</button>
+        </div>
+        <div class="header-center">
+            <span class="brand-tag">EcoLife</span>
+            <h1>Carbon Footprint Calculator</h1>
+        </div>
+        <div class="header-right">
+            <span id="step-indicator" class="step-indicator-badge">Step 1 of 7</span>
+        </div>
+    </header>
+
+    <div class="calc-wrapper">
+        <!-- Progress Stepper Bar -->
+        <nav class="stepper-nav">
+            <div class="step-item active" data-step="1"><strong>01</strong> Transport</div>
+            <div class="step-item" data-step="2"><strong>02</strong> Home Energy</div>
+            <div class="step-item" data-step="3"><strong>03</strong> Food</div>
+            <div class="step-item" data-step="4"><strong>04</strong> Shopping</div>
+            <div class="step-item" data-step="5"><strong>05</strong> Travel</div>
+            <div class="step-item" data-step="6"><strong>06</strong> Waste</div>
+            <div class="step-item" data-step="7"><strong>07</strong> Lifestyle</div>
+        </nav>
+
+        <div class="calc-grid">
+            <!-- LEFT: Detailed Input Form -->
+            <main class="calc-form-pane">
+                
+                <!-- STEP 1: TRANSPORT -->
+                <section class="form-section active" id="section-1">
+                    <h2>🚗 Transport & Daily Mobility</h2>
+                    <p class="section-subtitle">Tell us how you normally travel.</p>
+                    
+                    <h3>A. Personal Vehicle</h3>
+                    <div class="form-group">
+                        <label>Do you use a personal vehicle? <span class="required">*</span> <span class="required-badge">Required</span></label>
+                        <div class="radio-group" id="group-has-vehicle">
+                            <label><input type="radio" name="hasVehicle" value="yes" checked> Yes</label>
+                            <label><input type="radio" name="hasVehicle" value="no"> No</label>
+                        </div>
+                    </div>
+
+                    <div id="personal-vehicle-conditional-box">
+                        <div class="form-group">
+                            <label>Vehicle type <span class="required">*</span> <span class="required-badge">Required</span></label>
+                            <select id="veh-type" class="form-control">
+                                <option value="car">Car</option>
+                                <option value="suv">SUV</option>
+                                <option value="motorcycle">Motorcycle</option>
+                                <option value="scooter">Scooter</option>
+                                <option value="van">Van</option>
+                                <option value="pickup">Pickup</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Fuel type <span class="required">*</span> <span class="required-badge">Required</span></label>
+                            <select id="veh-fuel" class="form-control">
+                                <option value="petrol">Petrol</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="cng">CNG</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="electric">Electric</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="efficiency-group-container">
+                            <label id="efficiency-label-text">Vehicle efficiency <span class="optional-badge">Optional</span> <span class="info-icon" title="km/L means how many kilometres a vehicle can travel using one litre of fuel.">ⓘ</span></label>
+                            <input type="number" id="veh-efficiency" class="form-control" value="15" min="1">
+                        </div>
+                    </div>
+
+                    <h3>B. Daily Commute & Distance</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Daily distance <span class="required">*</span> <span class="required-badge">Required</span></label>
+                            <input type="number" id="commute-dist" class="form-control" value="15" min="0">
+                            <small class="field-unit">km / day</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Days per week <span class="required">*</span> <span class="required-badge">Required</span></label>
+                            <input type="number" id="commute-days" class="form-control" value="5" min="0" max="7">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Trips per day <span class="optional-badge">Optional</span></label>
+                            <input type="number" id="commute-trips" class="form-control" value="2" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Average passengers <span class="optional-badge">Optional</span> <span class="info-icon" title="If multiple people share the same vehicle, emissions can be divided among passengers.">ⓘ</span></label>
+                            <input type="number" id="veh-passengers" class="form-control" value="1" min="1">
+                        </div>
+                    </div>
+
+                    <h3>C. Public Transport & Active Travel</h3>
+                    <div class="form-group">
+                        <label>Do you use public transport? <span class="optional-badge">Optional</span></label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="usePublic" value="yes" checked> Yes</label>
+                            <label><input type="radio" name="usePublic" value="no"> No</label>
+                        </div>
+                    </div>
+
+                    <div id="public-transport-box" class="form-row-3">
+                        <div class="form-group"><label>Bus <span class="optional-badge">Optional</span></label><input type="number" id="pub-bus" class="form-control" value="0" min="0"><small>km/week</small></div>
+                        <div class="form-group"><label>Train <span class="optional-badge">Optional</span></label><input type="number" id="pub-train" class="form-control" value="0" min="0"><small>km/week</small></div>
+                        <div class="form-group"><label>Metro <span class="optional-badge">Optional</span></label><input type="number" id="pub-metro" class="form-control" value="0" min="0"><small>km/week</small></div>
+                    </div>
+                    <div class="form-row-3" style="margin-top: 10px;" id="public-transport-box-2">
+                        <div class="form-group"><label>Auto <span class="optional-badge">Optional</span></label><input type="number" id="pub-auto" class="form-control" value="0" min="0"><small>km/week</small></div>
+                        <div class="form-group"><label>Taxi/Cab <span class="optional-badge">Optional</span></label><input type="number" id="pub-taxi" class="form-control" value="0" min="0"><small>km/week</small></div>
+                        <div class="form-group"><label>Walking/Cycling <span class="optional-badge">Optional</span></label><input type="number" id="act-walk" class="form-control" value="10" min="0"><small>km/week</small></div>
+                    </div>
+                </section>
+
+                <!-- STEP 2: HOME ENERGY -->
+                <section class="form-section" id="section-2" style="display: none;">
+                    <h2>⚡ Home Energy</h2>
+                    <p class="section-subtitle">Tell us about your household energy consumption.</p>
+
+                    <div class="form-group">
+                        <label>Do you know your monthly electricity usage? <span class="required">*</span> <span class="required-badge">Required</span></label>
+                        <div class="radio-group" id="know-kwh-group">
+                            <label><input type="radio" name="knowKwh" value="yes" checked> Yes</label>
+                            <label><input type="radio" name="knowKwh" value="no"> No</label>
+                        </div>
+                    </div>
+
+                    <div id="kwh-known-box" class="form-group">
+                        <label>Monthly electricity <span class="required">*</span> <span class="required-badge">Required</span> <span class="info-icon" title="kWh means kilowatt-hour. This is the electricity unit normally shown on your electricity bill.">ⓘ</span></label>
+                        <input type="number" id="energy-kwh" class="form-control" value="200" min="0">
+                        <small class="field-unit">kWh / units</small>
+                    </div>
+
+                    <div id="kwh-unknown-box" class="form-group" style="display:none;">
+                        <label>Monthly electricity bill <span class="optional-badge">Optional (Estimated)</span></label>
+                        <input type="number" id="energy-bill" class="form-control" value="1500" min="0">
+                        <small class="field-unit">₹ / month</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you use solar electricity? <span class="required">*</span> <span class="required-badge">Required</span></label>
+                        <div class="radio-group" id="has-solar-group">
+                            <label><input type="radio" name="hasSolar" value="yes"> Yes</label>
+                            <label><input type="radio" name="hasSolar" value="no" checked> No</label>
+                        </div>
+                    </div>
+
+                    <div id="solar-pct-box" class="form-group" style="display:none;">
+                        <label>Solar contribution <span class="optional-badge">Optional</span></label>
+                        <input type="number" id="energy-solar-pct" class="form-control" value="20" min="0" max="100">
+                        <small class="field-unit">%</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you use LPG? <span class="optional-badge">Optional</span></label>
+                        <div class="radio-group" id="has-lpg-group">
+                            <label><input type="radio" name="hasLpg" value="yes" checked> Yes</label>
+                            <label><input type="radio" name="hasLpg" value="no"> No</label>
+                        </div>
+                    </div>
+
+                    <div id="lpg-details-box" class="form-row">
+                        <div class="form-group">
+                            <label>Cylinder size <span class="required">*</span> <span class="required-badge">Required</span></label>
+                            <select id="lpg-size" class="form-control">
+                                <option value="5">5 kg</option>
+                                <option value="14.2" selected>14.2 kg</option>
+                                <option value="19">19 kg</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Cylinders per month <span class="required">*</span> <span class="required-badge">Required</span></label>
+                            <input type="number" id="lpg-count" class="form-control" value="1" min="0">
+                        </div>
+                    </div>
+
+                    <h3>Air Conditioner & Appliances</h3>
+                    <div class="form-group">
+                        <label>Do you use AC? <span class="optional-badge">Optional</span></label>
+                        <div class="radio-group" id="has-ac-group">
+                            <label><input type="radio" name="hasAc" value="yes"> Yes</label>
+                            <label><input type="radio" name="hasAc" value="no" checked> No</label>
+                        </div>
+                    </div>
+
+                    <div id="ac-details-box" style="display:none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>AC type <span class="optional-badge">Optional</span></label>
+                                <select id="ac-type" class="form-control">
+                                    <option value="split">Split</option>
+                                    <option value="window">Window</option>
+                                    <option value="inverter">Inverter</option>
+                                    <option value="central">Central</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Quantity <span class="required">*</span> <span class="required-badge">Required</span></label>
+                                <input type="number" id="ac-qty" class="form-control" value="1" min="1">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Hours / day <span class="required">*</span> <span class="required-badge">Required</span></label>
+                                <input type="number" id="ac-hours" class="form-control" value="4" min="0" max="24">
+                            </div>
+                            <div class="form-group">
+                                <label>Days / month <span class="required">*</span> <span class="required-badge">Required</span></label>
+                                <input type="number" id="ac-days" class="form-control" value="30" min="0" max="31">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 3: FOOD -->
+                <section class="form-section" id="section-3" style="display: none;">
+                    <h2>🍽️ Food & Diet</h2>
+                    <p class="section-subtitle">Tell us about your usual food habits.</p>
+
+                    <div class="form-group">
+                        <label>Diet type <span class="required">*</span> <span class="required-badge">Required</span></label>
+                        <select id="food-diet-type" class="form-control">
+                            <option value="vegan">Vegan</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="eggVeg">Vegetarian + Eggs</option>
+                            <option value="pescatarian">Pescatarian</option>
+                            <option value="nonVeg" selected>Non-Vegetarian</option>
+                        </select>
+                    </div>
+
+                    <div id="conditional-meat-box">
+                        <h3>Meat & Seafood Frequency</h3>
+                        <div class="form-row">
+                            <div class="form-group"><label>Chicken <span class="optional-badge">Optional</span></label><select id="freq-chicken" class="form-control"><option value="never">Never</option><option value="rarely">Rarely</option><option value="1-2" selected>1–2 times/week</option><option value="3-5">3–5 times/week</option><option value="daily">Daily</option></select></div>
+                            <div class="form-group"><label>Mutton/Lamb <span class="optional-badge">Optional</span></label><select id="freq-mutton" class="form-control"><option value="never" selected>Never</option><option value="rarely">Rarely</option><option value="1-2">1–2 times/week</option><option value="3-5">3–5 times/week</option><option value="daily">Daily</option></select></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Fish <span class="optional-badge">Optional</span></label><select id="freq-fish" class="form-control"><option value="never" selected>Never</option><option value="rarely">Rarely</option><option value="1-2">1–2 times/week</option><option value="3-5">3–5 times/week</option><option value="daily">Daily</option></select></div>
+                            <div class="form-group"><label>Eggs <span class="optional-badge">Optional</span></label><select id="freq-eggs" class="form-control"><option value="never">Never</option><option value="rarely">Rarely</option><option value="1-2" selected>1–2 times/week</option><option value="3-5">3–5 times/week</option><option value="daily">Daily</option></select></div>
+                        </div>
+                    </div>
+
+                    <div id="conditional-dairy-box">
+                        <h3>Dairy</h3>
+                        <div class="form-row">
+                            <div class="form-group"><label>Milk <span class="optional-badge">Optional</span></label><select id="dairy-milk" class="form-control"><option value="none">None</option><option value="low">&lt;1 glass/day</option><option value="med" selected>1–2 glasses/day</option><option value="high">2+ glasses/day</option></select></div>
+                            <div class="form-group"><label>Cheese <span class="optional-badge">Optional</span></label><select id="dairy-cheese" class="form-control"><option value="never">Never</option><option value="rarely">Rarely</option><option value="sometimes" selected>Sometimes</option><option value="often">Often</option></select></div>
+                        </div>
+                    </div>
+
+                    <h3>Food Waste</h3>
+                    <div class="form-group">
+                        <label>How much food do you throw away? <span class="optional-badge">Optional</span></label>
+                        <select id="food-waste" class="form-control">
+                            <option value="veryLow">Very Low</option>
+                            <option value="low">Low</option>
+                            <option value="avg" selected>Average</option>
+                            <option value="high">High</option>
+                            <option value="veryHigh">Very High</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- STEP 4: SHOPPING -->
+                <section class="form-section" id="section-4" style="display: none;">
+                    <h2>🛍️ Shopping & Purchased Products</h2>
+                    <p class="section-subtitle">Add the products you purchased.</p>
+
+                    <div class="add-box">
+                        <div class="form-group">
+                            <label>Category <span class="required">*</span> <span class="required-badge">Required</span></label>
+                            <select id="shop-cat" class="form-control">
+                                <option value="clothing">Clothing</option>
+                                <option value="footwear">Footwear</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="furniture">Furniture</option>
+                                <option value="appliances">Appliances</option>
+                                <option value="bags">Bags & Accessories</option>
+                                <option value="personalCare">Personal Care</option>
+                                <option value="household">Household Items</option>
+                            </select>
+                        </div>
+
+                        <!-- DYNAMIC SUB-ITEM SELECTOR -->
+                        <div class="form-group" id="subcat-container">
+                            <label>Product Type <span class="required">*</span> <span class="required-badge">Required</span></label>
+                            <select id="shop-subcat" class="form-control"></select>
+                        </div>
+
+                        <!-- DYNAMIC MATERIAL SELECTOR -->
+                        <div class="form-group" id="material-container">
+                            <label>Material / Type <span class="optional-badge">Optional</span></label>
+                            <select id="shop-material" class="form-control"></select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Quantity <span class="required">*</span> <span class="required-badge">Required</span></label>
+                                <input type="number" id="shop-qty" class="form-control" value="1" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Condition <span class="optional-badge">Optional</span></label>
+                                <select id="shop-condition" class="form-control">
+                                    <option value="new">Brand New</option>
+                                    <option value="secondHand">Second-hand</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="button" id="add-product-btn" class="btn-sub">+ Add Product to List</button>
+                    </div>
+
+                    <div id="shopping-list-display" class="item-display-container"></div>
+                </section>
+
+                <!-- STEP 5: TRAVEL -->
+                <section class="form-section" id="section-5" style="display: none;">
+                    <h2>✈️ Travel & Transit</h2>
+                    <p class="section-subtitle">Record your long distance travel and flights.</p>
+
+                    <div class="form-group">
+                        <label>Select travel modes used in the last 12 months: <span class="optional-badge">Optional</span></label>
+                        <div class="checkbox-group-grid">
+                            <label><input type="checkbox" id="chk-airplane" checked> ✈️ Airplane</label>
+                            <label><input type="checkbox" id="chk-train"> 🚆 Train</label>
+                            <label><input type="checkbox" id="chk-bus"> 🚌 Bus</label>
+                            <label><input type="checkbox" id="chk-road"> 🚗 Road Trip</label>
+                        </div>
+                    </div>
+
+                    <!-- AIRPLANE PANEL -->
+                    <div id="panel-airplane" class="travel-sub-panel">
+                        <h3>✈️ Airplane Flights</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Flight type <span class="required">*</span> <span class="required-badge">Required</span></label>
+                                <select id="flight-type" class="form-control">
+                                    <option value="domestic">Domestic</option>
+                                    <option value="international">International</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Class <span class="required">*</span> <span class="required-badge">Required</span></label>
+                                <select id="flight-class" class="form-control">
+                                    <option value="economy">Economy</option>
+                                    <option value="business">Business</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Approximate distance <span class="required">*</span> <span class="required-badge">Required</span></label>
+                                <input type="number" id="flight-dist" class="form-control" value="1200" min="0">
+                                <small class="field-unit">km (one-way or total)</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Number of trips (Round-trips) <span class="required">*</span> <span class="required-badge">Required</span></label>
+                                <input type="number" id="flight-trips" class="form-control" value="1" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TRAIN PANEL -->
+                    <div id="panel-train" class="travel-sub-panel" style="display:none;">
+                        <h3>🚆 Train Travel</h3>
+                        <div class="form-row">
+                            <div class="form-group"><label>Distance per trip <span class="required">*</span></label><input type="number" id="train-dist" class="form-control" value="300" min="0"><small>km</small></div>
+                            <div class="form-group"><label>Trips per year <span class="required">*</span></label><input type="number" id="train-trips" class="form-control" value="4" min="0"></div>
+                        </div>
+                    </div>
+
+                    <!-- BUS PANEL -->
+                    <div id="panel-bus" class="travel-sub-panel" style="display:none;">
+                        <h3>🚌 Bus Travel</h3>
+                        <div class="form-row">
+                            <div class="form-group"><label>Distance per trip <span class="required">*</span></label><input type="number" id="bus-dist" class="form-control" value="200" min="0"><small>km</small></div>
+                            <div class="form-group"><label>Trips per year <span class="required">*</span></label><input type="number" id="bus-trips" class="form-control" value="2" min="0"></div>
+                        </div>
+                    </div>
+
+                    <!-- ROAD TRIP PANEL -->
+                    <div id="panel-road" class="travel-sub-panel" style="display:none;">
+                        <h3>🚗 Road Trips</h3>
+                        <div class="form-row">
+                            <div class="form-group"><label>Total road trip distance <span class="required">*</span></label><input type="number" id="road-dist" class="form-control" value="1000" min="0"><small>km / year</small></div>
+                            <div class="form-group"><label>Passengers sharing <span class="optional-badge">Optional</span></label><input type="number" id="road-pass" class="form-control" value="2" min="1"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 6: WASTE -->
+                <section class="form-section" id="section-6" style="display: none;">
+                    <h2>🗑️ Waste & Recycling</h2>
+                    <p class="section-subtitle">Household waste generation and recycling habits.</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Household size <span class="required">*</span> <span class="required-badge">Required</span> <span class="info-icon" title="Enter how many people normally live in your household.">ⓘ</span></label>
+                            <input type="number" id="waste-household" class="form-control" value="3" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Waste level <span class="required">*</span> <span class="required-badge">Required</span></label>
+                            <select id="waste-level" class="form-control">
+                                <option value="low">Low</option>
+                                <option value="average" selected>Average</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 7: LIFESTYLE / ECO HABITS -->
+                <section class="form-section" id="section-7" style="display: none;">
+                    <h2>🌱 Lifestyle & Eco Habits</h2>
+                    <p class="section-subtitle">Your sustainable habits (boosts your Eco Score).</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Reusable shopping bags? <span class="optional-badge">Optional</span></label>
+                            <select id="habit-reusables" class="form-control"><option value="always" selected>Always</option><option value="sometimes">Sometimes</option><option value="never">Never</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Recycle regularly? <span class="optional-badge">Optional</span></label>
+                            <select id="habit-recycle" class="form-control"><option value="yes" selected>Yes</option><option value="sometimes">Sometimes</option><option value="no">No</option></select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Use LED bulbs? <span class="optional-badge">Optional</span></label>
+                            <select id="habit-led" class="form-control"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Walk/cycle for short trips? <span class="optional-badge">Optional</span></label>
+                            <select id="habit-walk" class="form-control"><option value="often" selected>Often</option><option value="sometimes">Sometimes</option><option value="never">Never</option></select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Navigation Controls -->
+                <div class="form-nav-footer">
+                    <button type="button" id="prev-btn" class="btn-secondary" style="display: none;">← Back</button>
+                    <button type="button" id="next-btn" class="btn-primary">Continue →</button>
+                </div>
+
+            </main>
+
+            <!-- RIGHT: Live Carbon Summary Panel -->
+            <aside class="calc-summary-pane">
+                <h3>YOUR CURRENT IMPACT</h3>
+                <div class="summary-big-val">
+                    <span id="summary-monthly">287</span> <small>kg</small>
+                    <p>CO₂e / month</p>
+                </div>
+                <div id="summary-annual" class="summary-sub-val">≈ 3.44 tonnes CO₂e / year</div>
+
+                <div class="breakdown-list">
+                    <div class="breakdown-row"><span>Transport</span> <strong id="b-trans">85 kg</strong></div>
+                    <div class="breakdown-row"><span>Energy</span> <strong id="b-energy">72 kg</strong></div>
+                    <div class="breakdown-row"><span>Food</span> <strong id="b-food">48 kg</strong></div>
+                    <div class="breakdown-row"><span>Shopping</span> <strong id="b-shop">20 kg</strong></div>
+                    <div class="breakdown-row"><span>Travel</span> <strong id="b-travel">12 kg</strong></div>
+                    <div class="breakdown-row"><span>Waste</span> <strong id="b-waste">8 kg</strong></div>
+                </div>
+
+                <div class="eco-score-card">
+                    <span>Eco Score: <strong id="summary-eco">78</strong> / 100</span>
+                </div>
+
+                <button type="button" id="save-dashboard-btn" class="btn-save-return" style="display: none;">
+                    Save & Return to Dashboard ✓
+                </button>
+            </aside>
+        </div>
+    </div>
+
+    <script src="carbon-calculator.js"></script>
+</body>
+</html>

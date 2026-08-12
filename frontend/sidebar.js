@@ -1,32 +1,51 @@
 document.addEventListener('DOMContentLoaded', () => {
     const sidebarContainer = document.getElementById('sidebar-container');
 
+    // 1. Fetch Sidebar HTML
     if (sidebarContainer) {
         fetch('sidebar.html')
-            .then(res => res.text())
+            .then(res => {
+                if (!res.ok) throw new Error("Sidebar file not loaded!");
+                return res.text();
+            })
             .then(html => {
                 sidebarContainer.innerHTML = html;
                 setActiveTab();
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error("Error:", err);
+            });
     }
 
+    // 2. Click Handler for Menu Toggle & Outside Click
     document.addEventListener('click', (e) => {
-        const menuBtn = e.target.closest('.menu-btn');
+        const menuBtn = e.target.closest('#menu-btn, .menu-btn');
         const sidebar = document.getElementById('sidebar');
 
-        if (menuBtn && sidebar) {
-            sidebar.classList.toggle('open');
+        // Menu button clicked
+        if (menuBtn) {
+            e.stopPropagation();
+            if (sidebar) {
+                sidebar.classList.toggle('open');
+            } else {
+                console.warn("#sidebar element DOM Not Found!");
+            }
             return;
         }
 
-        if (sidebar && sidebar.classList.contains('open') && !sidebar.contains(e.target)) {
-            sidebar.classList.remove('open');
+        // Clicked outside sidebar -> Close it
+        if (sidebar && sidebar.classList.contains('open')) {
+            if (!sidebar.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
         }
     });
 
+    // 3. Active Link Highlight Logic
     function setActiveTab() {
-        const currentPage = window.location.pathname.split('/').pop().toLowerCase() || 'index.html';
+        let currentPage = window.location.pathname.split('/').pop().toLowerCase();
+        if (!currentPage || currentPage === '') currentPage = 'index.html';
+
         const links = document.querySelectorAll('#sidebar li');
 
         links.forEach(li => {

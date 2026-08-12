@@ -1,61 +1,154 @@
-<!-- ye carbon.html hai  -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carbon</title>
+    <title>Carbon - EcoLife</title>
 
     <link rel="stylesheet" href="sidebar.css">
-<link rel="stylesheet" href="carbon.css">
+    <link rel="stylesheet" href="carbon.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <nav class="top">
-        <button class="menu-btn" id="menu-toggle">
-            ☰
-        </button>
-        <span>Carbon</span>
-    </nav>
+    <div id="sidebar-container"></div>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
-    <div id="sidebar"></div>
+    <div class="content-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-btn" id="menu-btn" aria-label="Toggle Menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="user-greeting">
+                    <h1>Carbon</h1>
+                    <p id="carbon-header-subtitle">Saturday, 2 August 2026 - Track your footprint</p>
+                </div>
+            </div>
 
-    <div class="main-content">
+            <div class="header-right">
+                <div class="points-pill">
+                    <span class="pts-plus">+<span id="header-points">33</span> pts</span>
+                    <span class="pts-label">today</span>
+                </div>
+                <div class="bell-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <span class="bell-dot">0</span>
+                </div>
+                <div class="avatar-ring" id="header-avatar">VM</div>
+            </div>
+        </header>
 
-        <nav class="upper">
-            Carbon Footprint
-        </nav>
+        <main class="main-content">
+            <div class="upper-flex-row" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2>Carbon Footprint</h2>
+                    <p class="subtitle">Track and reduce your monthly CO₂ emissions across all lifestyle categories.</p>
+                </div>
+                <!-- Updated Button to open standalone carbon-calculator.html page -->
+                <!-- Is line ko replace karein -->
+<button class="btn-open-modal" id="open-calc-modal-btn" onclick="window.location.href='carbon-calculator.html';">+ Log / Calculate Activity</button>
+            </div>
 
-        <div class="carbon-body1">
-            <span class="card">This Month</span>
-            <span class="card">Annual Pace</span>
-            <span class="card">Vs Nation Avg</span>
-        </div>
+            <!-- Row 1: Top Metric Cards -->
+            <div class="carbon-body1">
+                <div class="card metric-card">
+                    <div class="card-header">
+                        <span>THIS MONTH</span>
+                        <span class="icon-box green-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg></span>
+                    </div>
+                    <div class="metric-val"><span id="val-this-month">0.0</span> <small>t CO₂</small></div>
+                    <div class="badge badge-green">0.0 t vs last month</div>
+                </div>
 
-        <div class="carbon-body2">
-            <span class="first">7-Month Trend</span>
-            <span class="second">Breakdown by Source</span>
-        </div>
+                <div class="card metric-card">
+                    <div class="card-header">
+                        <span>ANNUAL PACE</span>
+                        <span class="icon-box teal-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line></svg></span>
+                    </div>
+                    <div class="metric-val"><span id="val-annual-pace">0.0</span> <small>t CO₂/yr</small></div>
+                    <div class="badge badge-green">0.0 t vs last month</div>
+                </div>
 
-        <div class="carbon-body3">
-            <div class="box">Car travel</div>
-            <div class="box">Flights</div>
-            <div class="box">Electricity</div>
-            <div class="box">Gas heating</div>
-            <div class="box">Diet</div>
-            <div class="box">Shopping</div>
-        </div>
+                <div class="card metric-card">
+                    <div class="card-header">
+                        <span>VS NATIONAL AVG</span>
+                        <span class="icon-box orange-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg></span>
+                    </div>
+                    <div class="metric-val"><span id="val-vs-avg">0.0</span> <small>t CO₂</small></div>
+                    <div class="badge badge-green">Compared to avg</div>
+                </div>
+            </div>
 
-        <footer class="footer-carbon">
-            Data last synced · EcoLife v3.2
-        </footer>
+            <!-- Row 2: Goal Card -->
+            <div class="card goal-card">
+                <div class="goal-header">
+                    <div>
+                        <h3>Monthly Carbon Goal</h3>
+                        <p class="subtitle">Reduce footprint below 2.0 t CO₂</p>
+                    </div>
+                    <button class="edit-goal-btn" id="edit-goal-btn">Edit goal</button>
+                    <div class="goal-edit-form" id="goal-edit-form" style="display: none;">
+                        <input type="number" id="goal-input" step="0.1" min="0" value="2.0">
+                        <span class="unit-text">t CO₂</span>
+                        <button class="btn-save" id="save-goal-btn">Save</button>
+                        <button class="btn-cancel" id="cancel-goal-btn">Cancel</button>
+                    </div>
+                </div>
 
+                <div class="goal-stats">
+                    <span>Current: <strong id="goal-current">0.0 t</strong></span>
+                    <span>Goal: <strong id="goal-target">2.0 t</strong></span>
+                </div>
+                <div class="goal-progress-bar">
+                    <div class="goal-progress-fill" id="goal-progress-fill" style="width: 0%;"></div>
+                </div>
+                <p class="goal-status-text" id="goal-status-text">No emissions recorded yet for this month.</p>
+            </div>
+
+            <!-- Row 3: Charts -->
+            <div class="carbon-body2">
+                <div class="card chart-card">
+                    <h3>Carbon Footprint Trend</h3>
+                    <p class="subtitle">Monthly CO₂ (t) · You vs National Average</p>
+                    <div class="chart-wrapper">
+                        <canvas id="carbonTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card breakdown-card">
+                    <h3>Emissions Breakdown</h3>
+                    <p class="subtitle">This month by category</p>
+                    <div class="donut-wrapper">
+                        <div class="donut-chart-container">
+                            <canvas id="carbonDonutChart"></canvas>
+                        </div>
+                        <div class="donut-legend-container" id="source-legend-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4: Detailed Breakdown Grid -->
+            <div class="detailed-section">
+                <h3>Detailed Source Breakdown</h3>
+                <p class="subtitle">Click any card or log data to update</p>
+                <div class="carbon-body3" id="detailed-cards-container"></div>
+            </div>
+
+            <footer class="footer-carbon">Data last synced · Just now · EcoLife v3.2</footer>
+        </main>
     </div>
 
+    <!-- Modal completely removed as requested. Calculator runs on standalone carbon-calculator.html -->
 
     <script src="sidebar.js"></script>
     <script src="carbon.js"></script>
-
 </body>
+
 </html>
