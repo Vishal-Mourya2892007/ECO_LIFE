@@ -9,9 +9,24 @@
     <link rel="stylesheet" href="sidebar.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Three.js for interactive 3D scene -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
 </head>
 
 <body>
+    <div id="bg-3d">
+        <canvas id="bg-3d-canvas" aria-hidden="true"></canvas>
+        <div class="bg-3d-overlay"></div>
+    </div>
+
     <div id="sidebar-container"></div>
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
@@ -59,6 +74,7 @@
                     <div class="badge" id="carbon-badge">0% vs last month</div>
                 </div>
 
+                
                 <div class="card metric-card">
                     <div class="card-header">
                         <span>ENERGY USED</span>
@@ -184,6 +200,7 @@
 
     <script src="sidebar.js"></script>
     <script src="index.js"></script>
+    <script type="module" src="three-scene.js"></script>
 </body>
 
 </html>
